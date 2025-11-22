@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Plus, X, ChevronRight, ChevronLeft, Play, Pause, ArrowRight, Shuffle, RefreshCw } from 'lucide-react';
 
 const POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C'];
-const PRIMARY_COLOR = '#2563eb';
-const ACCENT_COLOR = '#10b981';
-const ORANGE_ACCENT = '#f97316';
-const GRAY_LIGHT = '#94a3b8';
+const PRIMARY_COLOR = '#2D325E'; // Dark Blue/Navy
+const ACCENT_COLOR = '#2D7B66'; // Teal/Green
+const ORANGE_ACCENT = '#E56E1A'; // Orange (from basketball in logo)
+const GRAY_LIGHT = '#B0B0B0';
 const GRAY_BORDER = '#475569';
-const TEXT_COLOR_DARK = '#f1f5f9';
-const TEXT_COLOR_LIGHT = '#cbd5e1';
+const TEXT_COLOR_DARK = '#FFFFFF'; // White for headings
+const TEXT_COLOR_LIGHT = '#E0E0E0'; // Light grey for general text
 
 interface Player {
   id: string;
