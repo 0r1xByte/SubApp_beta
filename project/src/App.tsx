@@ -17,6 +17,7 @@ interface Player {
 }
 
 interface Substitution {
+  id: string;
   position: string;
   playerOutId: string;
   playerInId: string;
@@ -49,7 +50,7 @@ function App() {
   const [manualSubOut, setManualSubOut] = useState('');
   const [manualSubIn, setManualSubIn] = useState('');
   const [editingHalf, setEditingHalf] = useState(1);
-  const [showPositions, setShowPositions] = useState(true);
+  const [showPositions, setShowPositions] = useState(false);
   const [gamePlan, setGamePlan] = useState<Record<number, IntervalPlan[]>>({});
 
   const setupSteps: SetupStep[] = ['players', 'roles', 'starting', 'game plan'];
@@ -133,44 +134,70 @@ function App() {
     }
   };
 
-  const handlePlayerOutChange = (half: number, interval: number, position: string, playerOutId: string) => {
+  const handlePlayerOutChange = (half: number, interval: number, subId: string, playerOutId: string) => {
     setGamePlan(prev => {
       const updated = { ...prev };
       const intervalObj = updated[half].find(i => i.interval === interval);
       if (intervalObj) {
-        const existingSub = intervalObj.subs.find(s => s.position === position);
+        const existingSub = intervalObj.subs.find(s => s.id === subId);
         if (existingSub) {
           existingSub.playerOutId = playerOutId;
-        } else {
-          intervalObj.subs.push({ position, playerOutId, playerInId: '' });
         }
       }
       return updated;
     });
   };
 
-  const handlePlayerInChange = (half: number, interval: number, position: string, playerInId: string) => {
+  const handlePlayerInChange = (half: number, interval: number, subId: string, playerInId: string) => {
     setGamePlan(prev => {
       const updated = { ...prev };
       const intervalObj = updated[half].find(i => i.interval === interval);
       if (intervalObj) {
-        const existingSub = intervalObj.subs.find(s => s.position === position);
+        const existingSub = intervalObj.subs.find(s => s.id === subId);
         if (existingSub) {
           existingSub.playerInId = playerInId;
-        } else {
-          intervalObj.subs.push({ position, playerOutId: '', playerInId });
         }
       }
       return updated;
     });
   };
 
-  const removeSubFromPlan = (half: number, interval: number, position: string) => {
+  const handlePositionChange = (half: number, interval: number, subId: string, position: string) => {
     setGamePlan(prev => {
       const updated = { ...prev };
       const intervalObj = updated[half].find(i => i.interval === interval);
       if (intervalObj) {
-        intervalObj.subs = intervalObj.subs.filter(s => s.position !== position);
+        const existingSub = intervalObj.subs.find(s => s.id === subId);
+        if (existingSub) {
+          existingSub.position = position;
+        }
+      }
+      return updated;
+    });
+  };
+
+  const addSubToInterval = (half: number, interval: number) => {
+    setGamePlan(prev => {
+      const updated = { ...prev };
+      const intervalObj = updated[half].find(i => i.interval === interval);
+      if (intervalObj) {
+        intervalObj.subs.push({
+          id: Date.now().toString() + Math.random(),
+          position: '',
+          playerOutId: '',
+          playerInId: ''
+        });
+      }
+      return updated;
+    });
+  };
+
+  const removeSubFromPlan = (half: number, interval: number, subId: string) => {
+    setGamePlan(prev => {
+      const updated = { ...prev };
+      const intervalObj = updated[half].find(i => i.interval === interval);
+      if (intervalObj) {
+        intervalObj.subs = intervalObj.subs.filter(s => s.id !== subId);
       }
       return updated;
     });
@@ -582,7 +609,7 @@ function App() {
                           border: `1px solid ${GRAY_BORDER}`
                         }}
                       >
-                        {showPositions ? 'Hide' : 'Show'} Positions
+                        {showPositions ? 'Show' : 'Hide'} Positions
                       </button>
                       <span className="text-xs" style={{ color: TEXT_COLOR_LIGHT }}>
                         Toggle to see/hide position labels (PG, SG, etc.)
@@ -596,20 +623,35 @@ function App() {
                           <h4 className="font-bold text-base mb-3" style={{ color: ORANGE_ACCENT }}>
                             Interval {intervalObj.interval} ({formatTime((intervalObj.interval -1) * substitutionInterval)} - {formatTime(intervalObj.interval * substitutionInterval)})
                           </h4>
-                          <div className="grid grid-cols-1 gap-3">
-                            {POSITIONS.map(pos => {
-                              const currentSub = intervalObj.subs.find(sub => sub.position === pos);
-
-                              return (
-                                <div key={pos} className="flex flex-col gap-2">
+                          <div className="space-y-3">
+                            {intervalObj.subs.length === 0 ? (
+                              <p className="text-sm italic text-center py-2" style={{ color: TEXT_COLOR_LIGHT }}>
+                                No substitutions planned for this interval
+                              </p>
+                            ) : (
+                              intervalObj.subs.map((sub) => (
+                                <div key={sub.id} className="flex flex-col gap-2 p-3 bg-slate-800 rounded-md border" style={{ borderColor: GRAY_BORDER }}>
                                   {showPositions && (
-                                    <span className="text-xs font-semibold" style={{ color: TEXT_COLOR_LIGHT }}>{pos}:</span>
+                                    <div className="flex items-center gap-2">
+                                      <label className="text-xs font-semibold" style={{ color: TEXT_COLOR_LIGHT }}>Position:</label>
+                                      <select
+                                        value={sub.position}
+                                        onChange={(e) => handlePositionChange(editingHalf, intervalObj.interval, sub.id, e.target.value)}
+                                        className="flex-1 p-2 rounded-md border text-sm font-medium bg-slate-700 focus:outline-none"
+                                        style={{ borderColor: GRAY_BORDER, color: TEXT_COLOR_DARK }}
+                                      >
+                                        <option value="">Select Position</option>
+                                        {POSITIONS.map(pos => (
+                                          <option key={pos} value={pos}>{pos}</option>
+                                        ))}
+                                      </select>
+                                    </div>
                                   )}
                                   <div className="flex items-center gap-2">
                                     <select
-                                      value={currentSub?.playerOutId || ''}
-                                      onChange={(e) => handlePlayerOutChange(editingHalf, intervalObj.interval, pos, e.target.value)}
-                                      className="flex-1 p-2 rounded-md border text-sm font-medium bg-slate-800 focus:outline-none"
+                                      value={sub.playerOutId}
+                                      onChange={(e) => handlePlayerOutChange(editingHalf, intervalObj.interval, sub.id, e.target.value)}
+                                      className="flex-1 p-2 rounded-md border text-sm font-medium bg-slate-700 focus:outline-none"
                                       style={{ borderColor: GRAY_BORDER, color: TEXT_COLOR_DARK }}
                                     >
                                       <option value="">Player Out</option>
@@ -621,9 +663,9 @@ function App() {
                                     <ArrowRight className="w-5 h-5 flex-shrink-0" style={{ color: ORANGE_ACCENT }} />
 
                                     <select
-                                      value={currentSub?.playerInId || ''}
-                                      onChange={(e) => handlePlayerInChange(editingHalf, intervalObj.interval, pos, e.target.value)}
-                                      className="flex-1 p-2 rounded-md border text-sm font-medium bg-slate-800 focus:outline-none"
+                                      value={sub.playerInId}
+                                      onChange={(e) => handlePlayerInChange(editingHalf, intervalObj.interval, sub.id, e.target.value)}
+                                      className="flex-1 p-2 rounded-md border text-sm font-medium bg-slate-700 focus:outline-none"
                                       style={{ borderColor: GRAY_BORDER, color: TEXT_COLOR_DARK }}
                                     >
                                       <option value="">Player In</option>
@@ -631,19 +673,30 @@ function App() {
                                         <option key={player.id} value={player.id}>{player.name}</option>
                                       ))}
                                     </select>
-                                  </div>
-                                  {currentSub && (currentSub.playerOutId || currentSub.playerInId) && (
+
                                     <button
-                                      onClick={() => removeSubFromPlan(editingHalf, intervalObj.interval, pos)}
-                                      className="text-xs self-end hover:opacity-70 transition-all"
+                                      onClick={() => removeSubFromPlan(editingHalf, intervalObj.interval, sub.id)}
+                                      className="p-2 rounded-md hover:bg-slate-600 transition-all"
                                       style={{ color: ORANGE_ACCENT }}
                                     >
-                                      Remove Sub
+                                      <X className="w-5 h-5" />
                                     </button>
-                                  )}
+                                  </div>
                                 </div>
-                              );
-                            })}
+                              ))
+                            )}
+                            <button
+                              onClick={() => addSubToInterval(editingHalf, intervalObj.interval)}
+                              className="w-full py-2 rounded-md font-medium transition-all flex items-center justify-center gap-2 border"
+                              style={{
+                                backgroundColor: 'transparent',
+                                color: ACCENT_COLOR,
+                                borderColor: ACCENT_COLOR
+                              }}
+                            >
+                              <Plus className="w-5 h-5" />
+                              Add Substitution
+                            </button>
                           </div>
                         </div>
                       ))}
