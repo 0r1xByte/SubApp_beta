@@ -389,20 +389,19 @@ function App() {
                       )}
                     </p>
 
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {players.map(player => (
-                        <div key={player.id} className="flex items-center justify-between p-3 rounded-lg border border-white/10" style={{ backgroundColor: 'rgba(45, 50, 94, 0.38)' }}>
-                          <span className="font-medium text-base" style={{ color: TEXT_COLOR_DARK }}>{player.name}</span>
-                          <button
-                            onClick={() => removePlayer(player.id)}
-                            className="p-1 rounded-full hover:bg-red-900 transition-all"
-                            style={{ color: ORANGE_ACCENT }}
-                          >
-                            <X className="w-5 h-5" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {players.map(player => (
+                      <div key={player.id} className="flex items-center justify-between p-3 rounded-lg border border-white/10" style={{ backgroundColor: 'rgba(45, 50, 94, 0.38)' }}>
+                        <span className="font-medium text-base" style={{ color: TEXT_COLOR_DARK }}>{player.name}</span>
+                        <button
+                          onClick={() => removePlayer(player.id)}
+                          className="p-1 rounded-full hover:bg-red-900 transition-all"
+                          style={{ color: ORANGE_ACCENT }}
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
 
                   <button
