@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Plus, X, ChevronRight, ChevronLeft, Play, Pause, ArrowRight, Shuffle, RefreshCw } from 'lucide-react';
+import { Plus, X, ChevronRight, ChevronLeft, Play, Pause, ArrowRight, Shuffle, RefreshCw, Users, Clock } from 'lucide-react';
 
 const POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C'];
-const PRIMARY_COLOR = '#2D325E';
-const ACCENT_COLOR = '#2D7B66';
-const ORANGE_ACCENT = '#E56E1A';
-const TEXT_COLOR_LIGHT = '#E0E0E0';
+const PRIMARY_COLOR = '#2c3e5f';
+const ACCENT_COLOR = '#3d9970';
+const ORANGE_ACCENT = '#ff6b35';
+const TEXT_COLOR_LIGHT = '#a8b2c8';
 const TEXT_COLOR_DARK = '#FFFFFF';
-const GRAY_LIGHT = '#B0B0B0';
-const BG_DARK = '#2D325E';
-const BG_CARD = '#3d4a6b';
-const GRAY_BORDER = '#4a5578';
+const GRAY_LIGHT = '#8b95a8';
+const BG_DARK = '#1e2a3a';
+const BG_CARD = '#2c3e5f';
+const GRAY_BORDER = '#3d4f6b';
 
 interface Player {
   id: string;
@@ -307,49 +307,28 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="max-w-4xl mx-auto p-6">
+    <div className="min-h-screen" style={{ backgroundColor: BG_DARK }}>
+      <div className="max-w-6xl mx-auto p-6">
         {!setupComplete && (
           <div className="flex flex-col">
-            <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-6" style={{ backgroundColor: 'rgba(45, 50, 94, 0.69)' }}>
-              <h1 className="text-3xl font-extrabold text-center" style={{ color: TEXT_COLOR_DARK }}>
-                Basketball Rotation Manager
-              </h1>
-              <p className="text-center text-sm mt-1" style={{ color: TEXT_COLOR_LIGHT }}>Equal playing time & strategic substitutions</p>
-              <div className="flex items-center justify-center gap-2 mt-4">
-                {setupSteps.map((step, index) => (
-                  <div
-                    key={step}
-                    className={`h-3 w-3 rounded-full cursor-pointer transition-all`}
-                    onClick={() => setSetupStep(step)}
-                    style={{ backgroundColor: currentStepIndex >= index ? ACCENT_COLOR : GRAY_LIGHT }}
-                  />
-                ))}
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <Users className="w-8 h-8" style={{ color: ACCENT_COLOR }} />
+                <h1 className="text-4xl font-bold" style={{ color: TEXT_COLOR_DARK }}>
+                  Basketball Substitution Manager
+                </h1>
               </div>
-              <div className="flex justify-between mt-6 border-b" style={{ borderColor: GRAY_BORDER }}>
-                {setupSteps.map((step) => (
-                  <button
-                    key={step}
-                    className={`flex-1 py-3 text-base font-medium capitalize border-b-2 transition-all`}
-                    onClick={() => setSetupStep(step)}
-                    style={{
-                      borderColor: setupStep === step ? ORANGE_ACCENT : 'transparent',
-                      color: setupStep === step ? TEXT_COLOR_DARK : TEXT_COLOR_LIGHT,
-                    }}
-                  >
-                    {step === 'starting' ? 'Starting Five' : step}
-                  </button>
-                ))}
-              </div>
+              <p className="text-base" style={{ color: TEXT_COLOR_LIGHT }}>Equal playing time & strategic substitutions</p>
             </div>
 
-            <div className="flex-1 overflow-auto py-4">
+            {/* Main Card */}
+            <div className="rounded-2xl p-8 border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
               {setupStep === 'players' && (
-                <div className="space-y-6">
-                  <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: 'rgba(45, 50, 94, 0.69)' }}>
-                    <h2 className="text-2xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Game Setup: Add Players</h2>
+                <>
+                  <h2 className="text-3xl font-bold mb-6" style={{ color: TEXT_COLOR_DARK }}>Game Setup: Add Players</h2>
 
-                    <div className="mb-4">
+                  <div className="mb-4">
                       <label className="block text-sm font-medium mb-1" style={{ color: TEXT_COLOR_LIGHT }}>
                         Half Length (minutes)
                       </label>
@@ -429,12 +408,12 @@ function App() {
                   <button
                     onClick={() => setSetupStep('roles')}
                     disabled={players.length < POSITIONS.length}
-                    className="w-full py-3 rounded-lg font-bold text-white disabled:opacity-50 flex items-center justify-center gap-2 transition-all hover:opacity-90"
+                    className="w-full py-3 rounded-lg font-bold text-white disabled:opacity-50 flex items-center justify-center gap-2 transition-all hover:opacity-90 mt-6"
                     style={{ backgroundColor: players.length < POSITIONS.length ? GRAY_LIGHT : ACCENT_COLOR }}
                   >
                     Define Player Roles →
                   </button>
-                </div>
+                </>
               )}
 
               {setupStep === 'roles' && (
