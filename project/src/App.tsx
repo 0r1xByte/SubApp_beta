@@ -8,6 +8,9 @@ const ORANGE_ACCENT = '#E56E1A';
 const TEXT_COLOR_LIGHT = '#E0E0E0';
 const TEXT_COLOR_DARK = '#FFFFFF';
 const GRAY_LIGHT = '#B0B0B0';
+const BG_DARK = '#2D325E';
+const BG_CARD = '#3d4a6b';
+const GRAY_BORDER = '#4a5578';
 
 interface Player {
   id: string;
