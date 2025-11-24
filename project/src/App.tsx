@@ -2,15 +2,12 @@ import { useState, useEffect } from 'react';
 import { Plus, X, ChevronRight, ChevronLeft, Play, Pause, ArrowRight, Shuffle, RefreshCw } from 'lucide-react';
 
 const POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C'];
-const PRIMARY_COLOR = '#3d4a6b'; // Navy blue background for cards/sections
-const ACCENT_COLOR = '#2d7b66'; // Teal/Green for primary buttons and active states
-const ORANGE_ACCENT = '#e56e1a'; // Orange for role badges and accents
-const GRAY_LIGHT = '#8b8d98'; // Gray for back buttons
-const GRAY_BORDER = '#4a5578'; // Border color for cards
-const TEXT_COLOR_DARK = '#FFFFFF'; // White for headings
-const TEXT_COLOR_LIGHT = '#b8bcc8'; // Light grey for body text
-const BG_DARK = '#2d3250'; // Main dark background
-const BG_CARD = '#3d4a6b'; // Card background
+const PRIMARY_COLOR = '#2D325E';
+const ACCENT_COLOR = '#2D7B66';
+const ORANGE_ACCENT = '#E56E1A';
+const TEXT_COLOR_LIGHT = '#E0E0E0';
+const TEXT_COLOR_DARK = '#FFFFFF';
+const GRAY_LIGHT = '#B0B0B0';
 
 interface Player {
   id: string;
@@ -307,13 +304,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: BG_DARK }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-4xl mx-auto p-6">
         {!setupComplete && (
           <div className="flex flex-col">
-            <div className="shadow-sm border-b sticky top-0 z-10 px-4 py-3 -mx-6 -mt-6 mb-4" style={{ backgroundColor: BG_DARK, borderColor: GRAY_BORDER }}>
+            <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-6" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
               <h1 className="text-3xl font-extrabold text-center" style={{ color: TEXT_COLOR_DARK }}>
-                Basketball Substitution Manager
+                Basketball Rotation Manager
               </h1>
               <p className="text-center text-sm mt-1" style={{ color: TEXT_COLOR_LIGHT }}>Equal playing time & strategic substitutions</p>
               <div className="flex items-center justify-center gap-2 mt-4">
@@ -346,8 +343,8 @@ function App() {
             <div className="flex-1 overflow-auto py-4">
               {setupStep === 'players' && (
                 <div className="space-y-6">
-                  <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                    <h2 className="text-xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Game Setup: Add Players</h2>
+                  <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                    <h2 className="text-2xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Game Setup: Add Players</h2>
 
                     <div className="mb-4">
                       <label className="block text-sm font-medium mb-1" style={{ color: TEXT_COLOR_LIGHT }}>
@@ -387,14 +384,14 @@ function App() {
                         value={newPlayerName}
                         onChange={(e) => setNewPlayerName(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && addPlayer()}
-                        placeholder="Player Name"
-                        className="flex-1 px-4 py-2 rounded-md border focus:outline-none bg-slate-700"
-                        style={{ borderColor: GRAY_BORDER, color: TEXT_COLOR_DARK }}
+                        placeholder="Enter player name"
+                        className="flex-1 px-4 py-2 rounded-lg border border-white/20 focus:outline-none focus:border-white/40 backdrop-blur-sm"
+                        style={{ backgroundColor: `${PRIMARY_COLOR}60`, color: TEXT_COLOR_DARK }}
                       />
                       <button
                         onClick={addPlayer}
                         disabled={players.length >= 15}
-                        className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-50 flex items-center gap-2 transition-all"
+                        className="px-4 py-2 rounded-lg font-semibold text-white disabled:opacity-50 flex items-center gap-2 transition-all hover:opacity-90"
                         style={{ backgroundColor: players.length >= 15 ? GRAY_LIGHT : ACCENT_COLOR }}
                       >
                         <Plus className="w-5 h-5" />
@@ -410,9 +407,9 @@ function App() {
                       )}
                     </p>
 
-                    <div className="space-y-2 max-h-48 overflow-y-auto border rounded-md p-2 bg-slate-900" style={{ borderColor: GRAY_BORDER }}>
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
                       {players.map(player => (
-                        <div key={player.id} className="flex items-center justify-between p-3 bg-slate-800 rounded-md border" style={{ borderColor: GRAY_BORDER }}>
+                        <div key={player.id} className="flex items-center justify-between p-3 rounded-lg border border-white/10" style={{ backgroundColor: `${PRIMARY_COLOR}60` }}>
                           <span className="font-medium text-base" style={{ color: TEXT_COLOR_DARK }}>{player.name}</span>
                           <button
                             onClick={() => removePlayer(player.id)}
@@ -429,7 +426,7 @@ function App() {
                   <button
                     onClick={() => setSetupStep('roles')}
                     disabled={players.length < POSITIONS.length}
-                    className="w-full py-3 rounded-md font-bold text-white disabled:opacity-50 flex items-center justify-center gap-2 transition-all"
+                    className="w-full py-3 rounded-lg font-bold text-white disabled:opacity-50 flex items-center justify-center gap-2 transition-all hover:opacity-90"
                     style={{ backgroundColor: players.length < POSITIONS.length ? GRAY_LIGHT : ACCENT_COLOR }}
                   >
                     Define Player Roles →
@@ -439,8 +436,8 @@ function App() {
 
               {setupStep === 'roles' && (
                 <div className="space-y-6">
-                  <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                    <h2 className="text-xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Game Setup: Define Roles</h2>
+                  <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                    <h2 className="text-2xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Game Setup: Define Roles</h2>
                     <p className="text-sm mb-4" style={{ color: TEXT_COLOR_LIGHT }}>
                       Add custom roles like "Shooter" or "Rebounder" to help with decision-making.
                     </p>
@@ -510,7 +507,7 @@ function App() {
                   <div className="flex gap-4">
                     <button
                       onClick={() => setSetupStep('players')}
-                      className="flex-1 py-3 rounded-md font-bold flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90"
                       style={{ backgroundColor: GRAY_LIGHT, color: '#1a1d3a' }}
                     >
                       <ChevronLeft className="w-5 h-5" />
@@ -518,7 +515,7 @@ function App() {
                     </button>
                     <button
                       onClick={() => setSetupStep('starting')}
-                      className="flex-1 py-3 rounded-md font-bold text-white flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
                       style={{ backgroundColor: ACCENT_COLOR }}
                     >
                       Setup Rotation Order →
@@ -529,8 +526,8 @@ function App() {
 
               {setupStep === 'starting' && (
                 <div className="space-y-6">
-                  <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                    <h2 className="text-xl font-bold mb-3" style={{ color: TEXT_COLOR_DARK }}>Select Starting Five ({startingFive.length}/5)</h2>
+                  <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                    <h2 className="text-2xl font-bold mb-3" style={{ color: TEXT_COLOR_DARK }}>Select Starting Five ({startingFive.length}/5)</h2>
                     <p className="text-sm mb-4" style={{ color: TEXT_COLOR_LIGHT }}>
                       Select {POSITIONS.length} players to start the game ({startingFive.length}/{POSITIONS.length})
                     </p>
@@ -557,7 +554,7 @@ function App() {
                   <div className="flex gap-4">
                     <button
                       onClick={() => setSetupStep('roles')}
-                      className="flex-1 py-3 rounded-md font-bold flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90"
                       style={{ backgroundColor: GRAY_LIGHT, color: '#1a1d3a' }}
                     >
                       <ChevronLeft className="w-5 h-5" />
@@ -566,7 +563,7 @@ function App() {
                     <button
                       onClick={() => setSetupStep('game plan')}
                       disabled={startingFive.length !== POSITIONS.length}
-                      className="flex-1 py-3 rounded-md font-bold text-white disabled:opacity-50 flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 py-3 rounded-lg font-bold text-white disabled:opacity-50 flex items-center justify-center gap-2 transition-all hover:opacity-90"
                       style={{ backgroundColor: startingFive.length !== POSITIONS.length ? GRAY_LIGHT : ACCENT_COLOR }}
                     >
                       Select Starting Five →
@@ -577,8 +574,8 @@ function App() {
 
               {setupStep === 'game plan' && (
                 <div className="space-y-6">
-                  <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                    <h2 className="text-xl font-bold mb-3" style={{ color: TEXT_COLOR_DARK }}>Define Game Plan</h2>
+                  <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                    <h2 className="text-2xl font-bold mb-3" style={{ color: TEXT_COLOR_DARK }}>Define Game Plan</h2>
                     <p className="text-sm mb-4" style={{ color: TEXT_COLOR_LIGHT }}>
                       Plan your substitutions for each half and interval using the dropdowns below.
                     </p>
@@ -707,7 +704,7 @@ function App() {
                   <div className="flex gap-4">
                     <button
                       onClick={() => setSetupStep('starting')}
-                      className="flex-1 py-3 rounded-md font-bold flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90"
                       style={{ backgroundColor: GRAY_LIGHT, color: '#1a1d3a' }}
                     >
                       <ChevronLeft className="w-5 h-5" />
@@ -715,7 +712,7 @@ function App() {
                     </button>
                     <button
                       onClick={startGame}
-                      className="flex-1 py-3 rounded-md font-bold text-white flex items-center justify-center gap-2 transition-all"
+                      className="flex-1 py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
                       style={{ backgroundColor: ACCENT_COLOR }}
                     >
                       Start Game
@@ -730,7 +727,7 @@ function App() {
 
         {setupComplete && (
           <div className="flex flex-col">
-            <div className="shadow-sm border-b sticky top-0 z-10 px-4 py-3 -mx-6 -mt-6 mb-4" style={{ backgroundColor: BG_DARK, borderColor: GRAY_BORDER }}>
+            <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-6" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
               <h1 className="text-2xl font-bold text-center mb-2" style={{ color: TEXT_COLOR_DARK }}>Live Game Management</h1>
               <div className="flex items-center justify-between text-center">
                 <div>
@@ -805,8 +802,8 @@ function App() {
                 );
               })()}
 
-              <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                <h2 className="text-xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>On Court</h2>
+              <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                <h2 className="text-2xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>On Court</h2>
                 <div className="grid grid-cols-2 gap-3 text-base">
                   {POSITIONS.map(pos => {
                     const player = activePositions[pos];
@@ -829,8 +826,8 @@ function App() {
                 </div>
               </div>
 
-              <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                <h2 className="text-xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Bench Players</h2>
+              <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                <h2 className="text-2xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Bench Players</h2>
                 <div className="space-y-2 max-h-48 overflow-y-auto border rounded-md p-2 bg-slate-900" style={{ borderColor: GRAY_BORDER }}>
                   {getBenchPlayers().length > 0 ? (
                     getBenchPlayers().map(player => (
@@ -856,8 +853,8 @@ function App() {
                 </div>
               </div>
 
-              <div className="rounded-lg p-6 shadow-md border" style={{ backgroundColor: BG_CARD, borderColor: GRAY_BORDER }}>
-                <h2 className="text-xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Playing Time Stats</h2>
+              <div className="backdrop-blur-md rounded-2xl p-6 border border-white/20" style={{ backgroundColor: `${PRIMARY_COLOR}B0` }}>
+                <h2 className="text-2xl font-bold mb-4" style={{ color: TEXT_COLOR_DARK }}>Playing Time Stats</h2>
                 <div className="space-y-2 max-h-48 overflow-y-auto border rounded-md p-2 bg-slate-900" style={{ borderColor: GRAY_BORDER }}>
                   {getPlayerStats().map(player => (
                     <div key={player.id} className="flex flex-col items-start p-3 bg-slate-800 rounded-md border text-base" style={{ borderColor: GRAY_BORDER }}>
